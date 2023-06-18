@@ -30,9 +30,9 @@
 				{% for product in data %}
     			<div class="col-md-6 col-lg-3 ftco-animate">
     				<div class="product">
-    					<a href="{% url 'store:product' product.id %}" class="img-prod"><img class="img-fluid" src="{% static product.url %}" alt="Colorlib Template">
-    						{% if product.discount %}
-							<span class="status">{{product.discount}}%</span>
+    					<a href="{% url 'store:product' product.id %}" class="img-prod"><img class="img-fluid" src="/{{ product.image }}" alt="Colorlib Template">
+    						{% if product.discount_value %}
+							<span class="status">{{product.discount_value}}%</span>
 							{% endif %}
     						<div class="overlay"></div>
     					</a>
@@ -40,7 +40,7 @@
     						<h3><a href="#">{{product.name}}</a></h3>
     						<div class="d-flex">
     							<div class="pricing">
-									{% if product.discount %}
+									{% if product.discount_value %}
 		    						<p class="price"><span class="mr-2 price-dc">${{product.price_before}}</span><span class="price-sale">${{product.price_after}}</span></p>
 									{% else %}
 									<p class="price"><span>${{product.price_before}}</span></p>
