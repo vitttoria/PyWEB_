@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Category(models.Model):
@@ -29,5 +30,11 @@ class Discount(models.Model):
 
     def __str__(self):
         return f"{self.product.name}_{self.value}%_{self.date_end}"
+
+
+class Cart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
 
 # Create your models here.
