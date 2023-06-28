@@ -1,0 +1,74 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="hero-wrap hero-bread" style="background-image: url({% static 'store/images/bg_1.jpg' %});">
+      <div class="container">
+        <div class="row no-gutters slider-text align-items-center justify-content-center">
+          <div class="col-md-9 ftco-animate text-center">
+          	<p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home</a></span> <span>Wishlist</span></p>
+            <h1 class="mb-0 bread">My Wishlist</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="ftco-section ftco-cart">
+			<div class="container">
+				<div class="row">
+    			<div class="col-md-12 ftco-animate">
+    				<div class="cart-list">
+	    				<table class="table">
+						    <thead class="thead-primary">
+						      <tr class="text-center">
+						        <th>&nbsp;</th>
+						        <th>Product List</th>
+						        <th>&nbsp;</th>
+						        <th>Price</th>
+						      </tr>
+						    </thead>
+						    <tbody>
+{#						      {% for product in data %}#}<!-- Начало цикла-->
+                                <tr class="text-center">
+                                    <!-- Опционально! Реализовать, что при нажатии на крестик удаляется товар из Wishlist,
+                                    соответственно пишите ссылку на обработчик. Обработчик принимает параметр id товара
+                                    который он должен удалить из БД, удаляет его и возвращает перенаправление (redirect)
+                                    на обработчик wishlist, который показывает страницу wishlist-->
+                                    <td class="product-remove"><a href="{% url 'store:wishlist' %}"><span class="ion-ios-close"></span></a></td>
+                                    <!-- При нажатии на картинку (подставить из БД) должен быть переход на соответствующий товар ссылку прописать в href-->
+                                    <td class="image-prod"><a href="{% url 'store:product' product.id %}"><div class="img" style="/{{ product.image }}"></div></a></td>
+                                    <td class="product-name">
+                                        <h3>Bell Pepper</h3><!-- Название из БД-->
+                                        <p>description</p><!-- Описание из БД-->
+                                    </td>
+
+                                    <td class="price">$120</td><!-- Стоимость из БД-->
+
+                                  </tr>
+{#                              {% endfor %}#}<!-- Конец цикла-->
+						    </tbody>
+						  </table>
+					  </div>
+    			</div>
+    		</div>
+			</div>
+		</section>
+
+		<section class="ftco-section ftco-no-pt ftco-no-pb py-5 bg-light">
+      <div class="container py-4">
+        <div class="row d-flex justify-content-center py-5">
+          <div class="col-md-6">
+          	<h2 style="font-size: 22px;" class="mb-0">Subcribe to our Newsletter</h2>
+          	<span>Get e-mail updates about our latest shops and special offers</span>
+          </div>
+          <div class="col-md-6 d-flex align-items-center">
+            <form action="#" class="subscribe-form">
+              <div class="form-group d-flex">
+                <input type="text" class="form-control" placeholder="Enter email address">
+                <input type="submit" value="Subscribe" class="submit px-3">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+{% endblock %}

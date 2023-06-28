@@ -7,6 +7,54 @@ from rest_framework import viewsets, response
 from rest_framework.permissions import IsAuthenticated
 from .serializers import CartSerializer
 from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
+
+
+class WishlistView(View):
+    def get(self, request):
+        if request.user.is_authenticated:
+            products = Product.objects.values('id', 'name', 'image')
+            # код который необходим для обработчика
+            return render(request, "store/wishlist.html",  {"data": products})
+        # Иначе отправляет авторизироваться
+        return redirect('login:login')  # from django.shortcuts import redirect
+
+    def favourites(self, request, id):
+
+        product = get_object_or_404(Product, pk=id)
+        if product.favourites.filter(id=request.user.ide).exist():
+            product.favourites.remove(request.user)
+        else:
+            product.favourites.add(request.user)
+
+        return render(request, 'store/wishlist.html')
+
+
+    def product_favourite_list(request, id):
+        user = request.user
+        favourite_products = user.favourites.all()
+
+        context = {
+            'favourite_products': favourite_products
+        }
+
+        return render(request, 'store/wishlist.html', context)
+
+    def product_detail(request, id):
+        """ A view to show individual product details """
+
+        product = get_object_or_404(Product, pk=id)
+        is_favourite = False
+
+        if product.favourites.filter(id=request.user.id).exists():
+            is_favourite = True
+
+        context = {
+            'product': id,
+            'is_favourite': is_favourite,
+        }
+
+        return render(request, 'store/wishlist.html', context)
 
 
 class CartViewSet(viewsets.ModelViewSet):
@@ -39,7 +87,7 @@ class CartViewSet(viewsets.ModelViewSet):
             else:  # Иначе создаём объект по умолчанию (quantity по умолчанию = 1, так прописали в моделях)
                 cart_item = Cart(user=request.user, product=product)
         cart_item.save()  # Сохранили объект в БД
-        return response.Response({'message': 'Product added to cart'}, status=201)   # Вернули ответ, что всё
+        return response.Response({'message': 'Product added to cart'}, status=201)  # Вернули ответ, что всё
         # прошло успешно
 
     def update(self, request, *args, **kwargs):
