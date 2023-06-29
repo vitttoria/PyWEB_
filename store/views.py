@@ -13,7 +13,7 @@ from django.shortcuts import redirect
 class WishlistView(View):
     def get(self, request):
         if request.user.is_authenticated:
-            products = Product.objects.values('id', 'name', 'image')
+            products = Product.objects.values('id', 'name', 'description', 'price', 'image')
             # код который необходим для обработчика
             return render(request, "store/wishlist.html",  {"data": products})
         # Иначе отправляет авторизироваться

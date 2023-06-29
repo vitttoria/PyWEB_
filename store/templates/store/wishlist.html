@@ -37,11 +37,11 @@
                                     <!-- При нажатии на картинку (подставить из БД) должен быть переход на соответствующий товар ссылку прописать в href-->
                                     <td class="image-prod"><a href="{% url 'store:product' product.id %}"><div class="img" style="/{{ product.image }}"></div></a></td>
                                     <td class="product-name">
-                                        <h3>Bell Pepper</h3><!-- Название из БД-->
-                                        <p>description</p><!-- Описание из БД-->
+                                        <h3>{{product.name}}</h3><!-- Название из БД-->
+                                        <p>{{product.description}}</p><!-- Описание из БД-->
                                     </td>
 
-                                    <td class="price">$120</td><!-- Стоимость из БД-->
+                                    <td class="price">${{product.price}}</td><!-- Стоимость из БД-->
 
                                   </tr>
 {#                              {% endfor %}#}<!-- Конец цикла-->
