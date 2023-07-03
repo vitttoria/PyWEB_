@@ -27,24 +27,24 @@
 						      </tr>
 						    </thead>
 						    <tbody>
-{#						      {% for product in data %}#}<!-- Начало цикла-->
+						      {% for item in data %}<!-- Начало цикла-->
                                 <tr class="text-center">
                                     <!-- Опционально! Реализовать, что при нажатии на крестик удаляется товар из Wishlist,
                                     соответственно пишите ссылку на обработчик. Обработчик принимает параметр id товара
                                     который он должен удалить из БД, удаляет его и возвращает перенаправление (redirect)
                                     на обработчик wishlist, который показывает страницу wishlist-->
-                                    <td class="product-remove"><a href="{% url 'store:wishlist' %}"><span class="ion-ios-close"></span></a></td>
+                                    <td class="product-remove"><a href="{%url 'store:delete_from_wishlist' item.product.id %}"><span class="ion-ios-close"></span></a></td>
                                     <!-- При нажатии на картинку (подставить из БД) должен быть переход на соответствующий товар ссылку прописать в href-->
-                                    <td class="image-prod"><a href="{% url 'store:product' product.id %}"><div class="img" style="/{{ product.image }}"></div></a></td>
+                                    <td class="image-prod"><a href="{% url 'store:product' item.product.id %}"><div class="img" style="background-image:url({{item.product.image.url}});"></div></a></td>
                                     <td class="product-name">
-                                        <h3>{{product.name}}</h3><!-- Название из БД-->
-                                        <p>{{product.description}}</p><!-- Описание из БД-->
+                                        <h3>{{item.product.name}}</h3><!-- Название из БД-->
+                                        <p>{{item.product.description}}</p><!-- Описание из БД-->
                                     </td>
 
-                                    <td class="price">${{product.price}}</td><!-- Стоимость из БД-->
+                                    <td class="price">${{item.product.price}}</td><!-- Стоимость из БД-->
 
                                   </tr>
-{#                              {% endfor %}#}<!-- Конец цикла-->
+                                 {% endfor %}<!-- Конец цикла-->
 						    </tbody>
 						  </table>
 					  </div>

@@ -90,10 +90,10 @@ DATABASES = {
        'HOST': os.getenv('HOST_PGDB'),
        'PORT': os.getenv('PORT_PGDB'),
     },
-    'test': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'test_db.sqlite3',
-    }
+    # 'test': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': 'test_db.sqlite3',
+    # }
 }
 
 # Password validation

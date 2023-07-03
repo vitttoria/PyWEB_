@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views import View
 from django.db.models import OuterRef, Subquery, F, ExpressionWrapper, DecimalField, Case, When
 from django.utils import timezone
-from .models import Product, Cart, Discount
+from .models import Product, Cart, Discount, Wishlist
 from rest_framework import viewsets, response
 from rest_framework.permissions import IsAuthenticated
 from .serializers import CartSerializer
@@ -13,48 +13,30 @@ from django.shortcuts import redirect
 class WishlistView(View):
     def get(self, request):
         if request.user.is_authenticated:
-            products = Product.objects.values('id', 'name', 'description', 'price', 'image')
+            wishlist = Wishlist.objects.filter(user=request.user)
             # код который необходим для обработчика
-            return render(request, "store/wishlist.html",  {"data": products})
+            return render(request, "store/wishlist.html", {"data": wishlist})
         # Иначе отправляет авторизироваться
         return redirect('login:login')  # from django.shortcuts import redirect
 
-    def favourites(self, request, id):
 
-        product = get_object_or_404(Product, pk=id)
-        if product.favourites.filter(id=request.user.ide).exist():
-            product.favourites.remove(request.user)
+class WishlistAdd(View):
+    def get(self, request, id):
+        wishlist_item = Wishlist.objects.filter(user=request.user, product=id)
+        if wishlist_item.is_favorite:
+            wishlist_item.is_favorite = False
         else:
-            product.favourites.add(request.user)
+            wishlist_item.is_favorite = True
+        wishlist_item.save()
+        return redirect('store:shop')
 
-        return render(request, 'store/wishlist.html')
 
-
-    def product_favourite_list(request, id):
-        user = request.user
-        favourite_products = user.favourites.all()
-
-        context = {
-            'favourite_products': favourite_products
-        }
-
-        return render(request, 'store/wishlist.html', context)
-
-    def product_detail(request, id):
-        """ A view to show individual product details """
-
-        product = get_object_or_404(Product, pk=id)
-        is_favourite = False
-
-        if product.favourites.filter(id=request.user.id).exists():
-            is_favourite = True
-
-        context = {
-            'product': id,
-            'is_favourite': is_favourite,
-        }
-
-        return render(request, 'store/wishlist.html', context)
+class WishlistDelete(View):
+    def get(self, request, id):
+        # product = get_object_or_404(Product, id=item_id)
+        wishlist_item = Wishlist.objects.filter(user=request.user, product=id)
+        wishlist_item.delete()
+        return redirect('store:wishlist')
 
 
 class CartViewSet(viewsets.ModelViewSet):
