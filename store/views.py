@@ -22,10 +22,16 @@ class WishlistView(View):
 
 class WishlistAdd(View):
     def get(self, request, product_id):
-        product = get_object_or_404(Product, id=product_id)
-        wishlist_item = Wishlist.objects.filter(user=request.user, product=product)
-        wishlist_item.save()
-        return redirect('store:shop')
+        if request.user.is_authenticated:
+            product = get_object_or_404(Product, id=product_id)
+            wishlist_item = Wishlist.objects.filter(user=request.user, product=product)
+            if wishlist_item.exists():
+                return redirect('store:shop')
+            else:
+                wishlist_item = Wishlist(user=request.user, product=product)
+                wishlist_item.save()
+                return redirect('store:shop')
+        return redirect('login:login')
 
 
 class WishlistDelete(View):
