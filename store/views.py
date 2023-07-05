@@ -5,9 +5,35 @@ from django.utils import timezone
 from .models import Product, Cart, Discount, Wishlist
 from rest_framework import viewsets, response
 from rest_framework.permissions import IsAuthenticated
-from .serializers import CartSerializer
+from .serializers import CartSerializer, WishlistSerializer
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
+
+
+class WishlistViewSet(viewsets.ModelViewSet):
+    queryset = Wishlist.objects.all()
+    serializer_class = WishlistSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        wishlist_items = self.get_queryset().filter(product__id=request.data.get('product'))
+        if wishlist_items:  # Если продукт уже есть в избранном
+            return response.Response({'message': 'Product was already added to wishlist'})
+        else:  # Если продукта ещё нет в корзине
+            product = get_object_or_404(Product, id=request.data.get('product'))  # Получаем продукт и
+            # проверяем что он вообще существует, если его нет то выйдет ошибка 404
+            wishlist_item = Wishlist(user=request.user, product=product)
+        wishlist_item.save()  # Сохранили объект в БД
+        return response.Response({'message': 'Product added to wishlist'}, status=201)  # Вернули ответ, что всё
+        # прошло успешно
+
+    def destroy(self, request, *args, **kwargs):
+        wishlist_item = self.get_queryset().get(id=kwargs['pk'])
+        wishlist_item.delete()
+        return response.Response({'message': 'Product delete from wishlist'}, status=201)
 
 
 class WishlistView(View):
